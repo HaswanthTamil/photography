@@ -1,9 +1,10 @@
 "use client";
 
-import Image from "next/image";
+
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import { useScrollReveal } from "./hooks/useScrollReveal";
+import ScrollVideo from "./components/ScrollVideo";
 
 export default function HomePage() {
   useScrollReveal();
@@ -14,36 +15,20 @@ export default function HomePage() {
 
       <main>
         {/* HERO SECTION */}
-        <section className="relative h-screen w-full overflow-hidden flex items-end">
-          <div className="absolute inset-0 z-0">
-            <div className="w-full h-full relative transition-transform duration-[10s] scale-105 hover:scale-100">
-              <Image
-                src="/sv-image-1.jpg"
-                alt="A cinematic, low-angle photograph of a modernist architectural residence at twilight"
-                fill
-                priority
-                quality={100}
-                className="object-cover object-center"
-                sizes="100vw"
-              />
+        <section className="relative h-[300vh] w-full">
+          <div className="sticky top-0 h-screen w-full overflow-hidden flex items-end">
+            <div className="absolute inset-0 z-0">
+              <ScrollVideo src="/A_hyper_realistic_architectura.mp4" />
             </div>
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
-          </div>
-          <div className="relative z-10 w-full px-margin-mobile md:px-margin-desktop pb-16 md:pb-24 grid grid-cols-12 gap-gutter items-end">
-            <div className="col-span-12 md:col-span-8">
-              <h1 className="font-display-xl-mobile md:font-display-xl text-display-xl-mobile md:text-display-xl text-white mb-6">
-                Architecture that begins with how you live
+            
+            {/* Overlay to hide watermark and provide elegant titling */}
+            <div className="absolute bottom-0 left-0 w-full h-[40vh] bg-gradient-to-t from-black from-50% via-black/80 to-transparent z-10 pointer-events-none"></div>
+            <div className="absolute bottom-0 left-0 w-full p-8 md:p-12 lg:p-16 z-20 flex flex-col justify-end items-start pointer-events-none">
+              <h1 className="font-display-xl-mobile md:font-display-xl text-[3rem] sm:text-[4.5rem] md:text-[6rem] lg:text-[8rem] font-bold text-white leading-none tracking-tighter mb-4 md:mb-6">
+                ARCHITECTON
               </h1>
-              <p className="font-body-lg text-white/80 max-w-md">
-                We translate human behavior into permanent form. Modernist rigor meets the nuances of domestic life.
-              </p>
-            </div>
-            <div className="hidden md:flex col-span-4 justify-end items-end pb-4">
-              <div className="flex flex-col items-center gap-4 text-white/60">
-                <span className="font-label-md uppercase tracking-[0.3em] rotate-90 origin-right translate-y-12">Scroll</span>
-                <div className="w-px h-16 bg-white/30 relative overflow-hidden">
-                  <div className="absolute top-0 left-0 w-full h-1/2 bg-white animate-bounce"></div>
-                </div>
+              <div className="text-white/90 text-lg md:text-3xl font-medium uppercase tracking-[0.5em] pb-4">
+                Concept &mdash; Completion
               </div>
             </div>
           </div>
