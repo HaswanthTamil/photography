@@ -11,32 +11,50 @@ export default function HomePage() {
   useScrollReveal();
   
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [isMobile, setIsMobile] = useState(true); // default to true for safe mobile-first hydration
 
   useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    handleResize(); // Init on mount
+    window.addEventListener("resize", handleResize);
+
     const handleScroll = () => {
-      const scrollRange = window.innerHeight * 2;
-      setScrollProgress(Math.max(0, Math.min(1, window.scrollY / scrollRange)));
+      if (window.innerWidth < 768) {
+        setScrollProgress(1); // Mobile doesn't use scroll progress
+      } else {
+        const scrollRange = window.innerHeight * 2;
+        setScrollProgress(Math.max(0, Math.min(1, window.scrollY / scrollRange)));
+      }
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll(); // Init
-    return () => window.removeEventListener("scroll", handleScroll);
+    
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
 
   return (
     <>
-      <Header isVisible={scrollProgress >= 0.95} />
+      <Header isVisible={isMobile || scrollProgress >= 0.95} />
 
       <main>
         {/* HERO SECTION */}
-        <section className="relative h-[300vh] w-full">
-          <div className="sticky top-0 h-screen w-full overflow-hidden flex items-end">
-            <div className="absolute inset-0 z-0">
+        <section className={`relative w-full ${isMobile ? 'h-screen' : 'h-[300vh]'}`}>
+          <div className={`${isMobile ? 'relative h-full' : 'sticky top-0 h-screen'} w-full overflow-hidden flex items-end`}>
+            
+            {/* Desktop: Scroll Video */}
+            <div className="absolute inset-0 z-0 hidden md:block">
               <ScrollVideo src="/bgvideo-scrub.mp4" />
             </div>
+
+            {/* Mobile: Static Background */}
+            <div className="absolute inset-0 z-0 md:hidden bg-[#1C1C1A]"></div>
           
             {/* Overlay to hide watermark and provide elegant titling */}
             <div className="absolute bottom-0 left-0 w-full h-[40vh] bg-gradient-to-t from-black from-50% via-black/80 to-transparent z-10 pointer-events-none"></div>
-            <div className={`absolute bottom-0 left-0 w-full p-8 md:p-12 lg:p-16 z-20 flex flex-col justify-end items-start pointer-events-none transition-all duration-1000 ${scrollProgress > 0.05 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
+            <div className={`absolute bottom-0 left-0 w-full p-8 md:p-12 lg:p-16 z-20 flex flex-col justify-end items-start pointer-events-none transition-all duration-1000 ${(isMobile || scrollProgress > 0.05) ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
               <h1 className="font-display-xl-mobile md:font-display-xl text-[3rem] sm:text-[4.5rem] md:text-[6rem] lg:text-[8rem] font-bold text-white leading-none tracking-tighter mb-4 md:mb-6">
                 ARCHITECTON
               </h1>
