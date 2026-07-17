@@ -14,10 +14,10 @@ export default function ScrollVideo({ src, className }: { src: string, className
     let targetTime = 0;
 
     const handleScroll = () => {
-      if (!video.duration) return;
+      if (!video.duration || isNaN(video.duration)) return;
       
       const scrollPosition = window.scrollY;
-      // Map the scroll range to the viewport height
+      // Map the scroll range to the viewport height.
       // This matches the h-[300vh] of the parent section minus 1vh (the sticky part)
       const scrollRange = window.innerHeight * 2; 
 
@@ -29,8 +29,9 @@ export default function ScrollVideo({ src, className }: { src: string, className
 
     const smoothUpdate = () => {
       if (video.duration && !isNaN(video.duration)) {
-        // Smooth interpolation
-        video.currentTime += (targetTime - video.currentTime) * 0.08;
+        // Smooth interpolation - the higher the multiplier, the snappier it is.
+        // We use 0.1 for a buttery smooth scrub that keeps up with the scroll.
+        video.currentTime += (targetTime - video.currentTime) * 0.1;
       }
       animationFrameId = requestAnimationFrame(smoothUpdate);
     };

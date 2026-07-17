@@ -164,3 +164,13 @@ textarea:focus {
 .hover-line:hover::after {
   transform: scaleX(1);
 }
+
+/* ─── Preloader Stacking Animation ───────────────────────────── */
+@keyframes stackDrop {
+  0% { transform: translateY(-30px) scale(0.95); opacity: 0; }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+.animate-stack-drop {
+  animation: stackDrop 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}

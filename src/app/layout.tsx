@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-
+import Preloader from "./components/Preloader";
 export const metadata: Metadata = {
   title: "ARCHITECTON | Architecture that begins with how you live",
   description: "We translate human behavior into permanent form. Modernist rigor meets the nuances of domestic life.",
@@ -24,6 +24,7 @@ export default function RootLayout({
         />
       </head>
       <body className="bg-surface text-on-surface font-body-md overflow-x-hidden">
+        <Preloader />
         {children}
       </body>
     </html>

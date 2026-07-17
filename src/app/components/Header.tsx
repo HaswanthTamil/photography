@@ -10,7 +10,7 @@ import Link from "next/link";
  * - Inquire button → /#contact (homepage footer).
  * - Compacts slightly on scroll.
  */
-export default function Header() {
+export default function Header({ isVisible = true }: { isVisible?: boolean }) {
   useEffect(() => {
     const header = document.querySelector<HTMLElement>("#site-header");
     const onScroll = () => {
@@ -30,10 +30,11 @@ export default function Header() {
   return (
     <header
       id="site-header"
-      className="fixed top-0 w-full z-50 bg-surface border-b border-outline-variant
+      className={`fixed top-0 w-full z-50 bg-surface border-b border-outline-variant
                  flex justify-between items-center
                  px-[20px] md:px-[80px] py-6
-                 transition-[padding,box-shadow] duration-200 ease-in-out"
+                 transition-all duration-700 ease-in-out
+                 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-full pointer-events-none'}`}
     >
       {/* Logo */}
       <Link

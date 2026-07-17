@@ -1,6 +1,7 @@
 "use client";
 
 
+import { useState, useEffect } from "react";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import { useScrollReveal } from "./hooks/useScrollReveal";
@@ -8,22 +9,34 @@ import ScrollVideo from "./components/ScrollVideo";
 
 export default function HomePage() {
   useScrollReveal();
+  
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollRange = window.innerHeight * 2;
+      setScrollProgress(Math.max(0, Math.min(1, window.scrollY / scrollRange)));
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll(); // Init
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
     <>
-      <Header />
+      <Header isVisible={scrollProgress >= 0.95} />
 
       <main>
         {/* HERO SECTION */}
         <section className="relative h-[300vh] w-full">
           <div className="sticky top-0 h-screen w-full overflow-hidden flex items-end">
             <div className="absolute inset-0 z-0">
-              <ScrollVideo src="/A_hyper_realistic_architectura.mp4" />
+              <ScrollVideo src="/bgvideo-scrub.mp4" />
             </div>
-            
+          
             {/* Overlay to hide watermark and provide elegant titling */}
             <div className="absolute bottom-0 left-0 w-full h-[40vh] bg-gradient-to-t from-black from-50% via-black/80 to-transparent z-10 pointer-events-none"></div>
-            <div className="absolute bottom-0 left-0 w-full p-8 md:p-12 lg:p-16 z-20 flex flex-col justify-end items-start pointer-events-none">
+            <div className={`absolute bottom-0 left-0 w-full p-8 md:p-12 lg:p-16 z-20 flex flex-col justify-end items-start pointer-events-none transition-all duration-1000 ${scrollProgress > 0.05 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
               <h1 className="font-display-xl-mobile md:font-display-xl text-[3rem] sm:text-[4.5rem] md:text-[6rem] lg:text-[8rem] font-bold text-white leading-none tracking-tighter mb-4 md:mb-6">
                 ARCHITECTON
               </h1>
