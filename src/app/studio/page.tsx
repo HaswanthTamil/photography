@@ -69,7 +69,7 @@ export default function StudioPage() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               className="w-full h-full object-cover grayscale brightness-90"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjkttZogsPktyxsVRCMkrD9-PA0MuuUet9iQ-8cf30DMfBYIURWtav_4o9nF2hL2mTZ3-NeMAzHTMRZSWuoD74sOxbViymTK4LL_HJDNyZCIGk0lvlvTFyR-V_C9qeZAThYttSuwx0SCNZW-BSSNZFCokfV-1Xddub3IbSkOz366X90Ahv_5oW0vN6Oa62jO6IWjGjcw18x5ZFB8lZo97Au2L8p4DTDldkMI30waTUxjGaoWep6fiR5OtMNziJVIKYyBCEX_BSykE"
+              src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=100&w=3840&auto=format&fit=crop"
               alt="A wide-angle, cinematic architectural photograph of a minimalist concrete structure at dusk"
             />
           </div>
@@ -92,22 +92,22 @@ export default function StudioPage() {
               {
                 name: "Julian Vane",
                 role: "Founder / Principal",
-                img: "https://lh3.googleusercontent.com/aida-public/AB6AXuB42fhAQPvdsBvY3z-dTSzwjLGRXXIEW6XQQpuQdCXRXCSJQGVDdM0fRrgzJeVtQbucdpdhX3PHQknMlki2lmRYoDJ9ftFIld3e2hTPkz7UcK2hTfvSFV_kFeGc-C1xuDYi-cmkox4fw-ps1JZ59bhB6CFhmP_-mG2VNkzt73EZF_VgA3JRg2nN2ZMPktdPOn91uLO34zKn8-eZnhhJUYmy0VpkQLqgNcK1Lc6AyK6BZBerrM09M8QJRRVPYLlo1O4VbdTW3lhDVCM",
+                img: "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=100&w=1200&auto=format&fit=crop",
               },
               {
                 name: "Elena Ross",
                 role: "Design Director",
-                img: "https://lh3.googleusercontent.com/aida-public/AB6AXuDMo5DVs4gw0WyyMlN2D7YlIHzoICWK0LkP_bv9T8FA5G3_w4Jubpmoj2jTMTff9J_knoJMMPEB8sOaY2uDJYHlZKQ3btdQt8Eqr7O5T1RBX21s-8Fh1bqvQqyZKupu7Xaen1LGX4-xo3aigLJJN2BAixQnOtq9kPSVnEQPNphloCwuAxG-TkODTVVwDbciQ5vAYhdZzmp-XN_47Sw8KM983vibqPXD32v4S3Dd2BmGkrqp8ylUhxsWtqXUWuy4COdM-P1VQbTwWac",
+                img: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=100&w=1200&auto=format&fit=crop",
               },
               {
                 name: "Marcus Thorne",
                 role: "Technical Lead",
-                img: "https://lh3.googleusercontent.com/aida-public/AB6AXuAJiVHzGaeW2hL5-i48adozXFtrc05-JcP7XhHkLSlHtkEbqhj9TM5gbHf9JuOwJOKyTH7GOruX_lf_3CbhmO5Mc3X81ZMVwZZaZhO2dsMq6aC_2MSDtF9ZAJ935pDR7GryGyPRMAyS_dmg3x-if8WhHpH3C0zUSncOYZStAI84MamwoaUIeoJEpVGXkbyfxwVF4uSRUjLo1dinoCR2HXGaL3RzhjTW4nEYXwTAnFvxdUjItXHEcvjDHtViy8G9FBk0Mq37IxDWWFI",
+                img: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=100&w=1200&auto=format&fit=crop",
               },
               {
                 name: "Sia Chen",
                 role: "Landscape Lead",
-                img: "https://lh3.googleusercontent.com/aida-public/AB6AXuAAqaiHNwpZhaAjdTLB4LV1tpod-flW5zo7UbUjD53Qc30U3uT_o8h__nYjQT8tQbHpMUSchUcxjiHZm3CC80lNoSuNh9PPztcJk8XOOiXtbvV-KMnQyU6njFx7x4o8Trk_AdmzmTlAPpgmrfo8Ar2WrzJsYjslqrTB8TF9A-V3tnHZ1_vo3CUCYu05OgT93s3m0SswhXK2Y604fT-FNRZTM5JLjCzAIFPkFGU5sjeCfSRmrJxMv8CTwAKir1_rSJSq6NdXSvb8RZE",
+                img: "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=100&w=1200&auto=format&fit=crop",
               },
             ].map((member) => (
               <div key={member.name} className="portrait-container group cursor-pointer">

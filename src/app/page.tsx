@@ -1,19 +1,61 @@
 "use client";
 
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import { useScrollReveal } from "./hooks/useScrollReveal";
 import ScrollVideo from "./components/ScrollVideo";
-
+import AnimatedCounter from "./components/AnimatedCounter";
+import TestimonialCarousel from "./components/TestimonialCarousel";
 export default function HomePage() {
   useScrollReveal();
   
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isMobile, setIsMobile] = useState(true); // default to true for safe mobile-first hydration
+  const [mobileTextVisible, setMobileTextVisible] = useState(false);
+  
+  const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const [activeStep, setActiveStep] = useState(1);
+  const [revealedSteps, setRevealedSteps] = useState<Set<number>>(new Set());
 
   useEffect(() => {
+    // Editorial Scroll Intersection Observer
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) {
+      setRevealedSteps(new Set([1, 2, 3]));
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const index = Number(entry.target.getAttribute('data-step'));
+            setActiveStep(index);
+            
+            setRevealedSteps(prev => {
+              const newSet = new Set(prev);
+              newSet.add(index);
+              return newSet;
+            });
+          }
+        });
+      },
+      {
+        threshold: 0,
+        rootMargin: "-45% 0px -45% 0px"
+      }
+    );
+
+    stepRefs.current.forEach(ref => {
+      if (ref) observer.observe(ref);
+    });
+
+    // Trigger mobile text fade-in after preloader finishes
+    const timer = setTimeout(() => {
+      setMobileTextVisible(true);
+    }, 3800);
+
     const handleResize = () => setIsMobile(window.innerWidth < 768);
     handleResize(); // Init on mount
     window.addEventListener("resize", handleResize);
@@ -30,8 +72,10 @@ export default function HomePage() {
     handleScroll(); // Init
     
     return () => {
+      clearTimeout(timer);
       window.removeEventListener("resize", handleResize);
       window.removeEventListener("scroll", handleScroll);
+      observer.disconnect();
     };
   }, []);
 
@@ -41,20 +85,19 @@ export default function HomePage() {
 
       <main>
         {/* HERO SECTION */}
-        <section className={`relative w-full ${isMobile ? 'h-screen' : 'h-[300vh]'}`}>
-          <div className={`${isMobile ? 'relative h-full' : 'sticky top-0 h-screen'} w-full overflow-hidden flex items-end`}>
+        <section className="relative w-full h-screen md:h-[300vh] bg-[#1C1C1A] md:bg-transparent">
+          <div className="relative md:sticky md:top-0 h-screen md:h-screen w-full overflow-hidden flex flex-col justify-center items-center md:flex-row md:items-end px-6 md:px-0">
             
             {/* Desktop: Scroll Video */}
             <div className="absolute inset-0 z-0 hidden md:block">
               <ScrollVideo src="/bgvideo-scrub.mp4" />
             </div>
-
-            {/* Mobile: Static Background */}
-            <div className="absolute inset-0 z-0 md:hidden bg-[#1C1C1A]"></div>
           
-            {/* Overlay to hide watermark and provide elegant titling */}
-            <div className="absolute bottom-0 left-0 w-full h-[40vh] bg-gradient-to-t from-black from-50% via-black/80 to-transparent z-10 pointer-events-none"></div>
-            <div className={`absolute bottom-0 left-0 w-full p-8 md:p-12 lg:p-16 z-20 flex flex-col justify-end items-start pointer-events-none transition-all duration-1000 ${(isMobile || scrollProgress > 0.05) ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
+            {/* Overlay to hide watermark and provide elegant titling on desktop */}
+            <div className="absolute bottom-0 left-0 w-full h-[40vh] bg-gradient-to-t from-black from-50% via-black/80 to-transparent z-10 pointer-events-none hidden md:block"></div>
+            
+            {/* Text Container: Relative on mobile, Absolute on desktop */}
+            <div className={`relative md:absolute md:bottom-0 md:left-0 w-full md:p-8 md:p-12 lg:p-16 z-20 flex flex-col justify-center items-center md:justify-end md:items-start text-center md:text-left pointer-events-none transition-all duration-[2000ms] ease-out ${(isMobile ? mobileTextVisible : scrollProgress > 0.05) ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
               <h1 className="font-display-xl-mobile md:font-display-xl text-[3rem] sm:text-[4.5rem] md:text-[6rem] lg:text-[8rem] font-bold text-white leading-none tracking-tighter mb-4 md:mb-6">
                 ARCHITECTON
               </h1>
@@ -65,33 +108,122 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* USP BANNER */}
-        <section className="bg-primary-container py-section-v-padding px-margin-mobile md:px-margin-desktop text-surface">
-          <div className="max-w-7xl mx-auto text-center mb-24">
-            <span className="font-eyebrow-sm text-eyebrow-sm text-secondary-container uppercase tracking-[0.2em] block mb-4">WHY ARCHITECTON</span>
-            <h2 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg mb-8">One Studio. Concept to Completion.</h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-16 relative">
-            {/* Step 01 */}
-            <div className="flex flex-col items-center text-center group">
-              <div className="font-display-xl text-secondary mb-4 opacity-80 group-hover:opacity-100 transition-opacity">01</div>
-              <div className="h-px w-24 bg-outline-variant mb-6"></div>
-              <h3 className="font-headline-lg text-2xl mb-4">Design</h3>
-              <p className="font-body-md text-on-surface-variant max-w-xs text-balance">Rigorous conceptual analysis that challenges conventions while respecting the site&apos;s natural heritage.</p>
+        {/* USP BANNER - Editorial Scroll */}
+        <section className="bg-primary-container text-surface relative">
+          <div className="grid grid-cols-1 lg:grid-cols-[35%_65%]">
+            
+            {/* LEFT PANEL - Sticky */}
+            <div className="lg:sticky lg:top-0 lg:h-screen flex flex-col justify-center py-section-v-padding px-margin-mobile md:px-margin-desktop z-10 motion-reduce:lg:relative motion-reduce:lg:h-auto">
+              <span className="font-eyebrow-sm text-eyebrow-sm text-secondary-container uppercase tracking-[0.2em] block mb-4">
+                WHY ARCHITECTON
+              </span>
+              <h2 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg mb-8 max-w-sm">
+                One Studio. Concept to Completion.
+              </h2>
+              <div className="relative h-8 overflow-hidden font-display-xl text-secondary text-2xl">
+                {/* Counter animation crossfade */}
+                <span className={`absolute top-0 left-0 transition-opacity duration-200 ${activeStep === 1 ? 'opacity-100' : 'opacity-0'}`}>01 / 03</span>
+                <span className={`absolute top-0 left-0 transition-opacity duration-200 ${activeStep === 2 ? 'opacity-100' : 'opacity-0'}`}>02 / 03</span>
+                <span className={`absolute top-0 left-0 transition-opacity duration-200 ${activeStep === 3 ? 'opacity-100' : 'opacity-0'}`}>03 / 03</span>
+              </div>
             </div>
-            {/* Step 02 */}
-            <div className="flex flex-col items-center text-center group">
-              <div className="font-display-xl text-secondary mb-4 opacity-80 group-hover:opacity-100 transition-opacity">02</div>
-              <div className="h-px w-24 bg-outline-variant mb-6"></div>
-              <h3 className="font-headline-lg text-2xl mb-4">Approve</h3>
-              <p className="font-body-md text-on-surface-variant max-w-xs text-balance">Meticulous technical documentation and planning navigation to ensure vision becomes reality without compromise.</p>
-            </div>
-            {/* Step 03 */}
-            <div className="flex flex-col items-center text-center group">
-              <div className="font-display-xl text-secondary mb-4 opacity-80 group-hover:opacity-100 transition-opacity">03</div>
-              <div className="h-px w-24 bg-outline-variant mb-6"></div>
-              <h3 className="font-headline-lg text-2xl mb-4">Build</h3>
-              <p className="font-body-md text-on-surface-variant max-w-xs text-balance">Integrated project management with our master builders to execute every hairline detail to perfection.</p>
+
+            {/* RIGHT PANEL - Scroll sequence */}
+            <div className="flex flex-col pt-[37.5vh] pb-[37.5vh]">
+              
+              {/* Step 1 */}
+              <div 
+                ref={el => { stepRefs.current[0] = el; }} 
+                data-step="1"
+                className={`relative flex flex-row items-center justify-start gap-4 md:gap-8 px-margin-mobile md:px-margin-desktop h-[25vh] snap-center transition-all duration-700 ease-out py-8
+                  ${activeStep === 1 ? 'opacity-100 scale-100 translate-y-0' : ''}
+                  ${activeStep > 1 ? 'opacity-20 scale-75 -translate-y-4' : ''}
+                  ${activeStep < 1 ? 'opacity-20 scale-75 translate-y-4' : ''}
+                `}
+              >
+                <div 
+                  aria-hidden="true" 
+                  className="font-display-xl text-white pointer-events-none select-none leading-none -tracking-[0.05em] whitespace-nowrap flex-shrink-0"
+                  style={{ fontSize: 'clamp(80px, 12vw, 180px)' }}
+                >
+                  01
+                </div>
+
+                <h3 className="font-headline-lg text-4xl md:text-6xl lg:text-[90px] leading-none whitespace-nowrap flex-shrink-0 z-10">Design</h3>
+                  
+                {/* Motion Graphic 1: Design Wireframe */}
+                <div className={`z-10 flex-shrink-0 transition-opacity duration-700 ${activeStep === 1 ? 'is-visible opacity-100' : 'opacity-0'}`}>
+                  <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="anim-spin-slow w-12 h-12 md:w-20 md:h-20 lg:w-[100px] lg:h-[100px]">
+                    <rect x="20" y="20" width="60" height="60" stroke="#E36540" strokeWidth="2" className="anim-draw-line" />
+                    <rect x="30" y="30" width="40" height="40" stroke="#E36540" strokeWidth="2" className="anim-draw-line" style={{ animationDelay: '0.2s' }} />
+                    <line x1="20" y1="20" x2="80" y2="80" stroke="#E36540" strokeWidth="2" className="anim-draw-line" style={{ animationDelay: '0.4s' }} />
+                    <line x1="80" y1="20" x2="20" y2="80" stroke="#E36540" strokeWidth="2" className="anim-draw-line" style={{ animationDelay: '0.6s' }} />
+                    <circle cx="50" cy="50" r="42" stroke="#E36540" strokeWidth="2" strokeDasharray="4 4" className="anim-draw-line" style={{ animationDelay: '0.8s' }} />
+                  </svg>
+                </div>
+              </div>
+
+              {/* Step 2 */}
+              <div 
+                ref={el => { stepRefs.current[1] = el; }} 
+                data-step="2"
+                className={`relative flex flex-row items-center justify-start gap-4 md:gap-8 px-margin-mobile md:px-margin-desktop h-[25vh] snap-center transition-all duration-700 ease-out py-8
+                  ${activeStep === 2 ? 'opacity-100 scale-100 translate-y-0' : ''}
+                  ${activeStep > 2 ? 'opacity-20 scale-75 -translate-y-4' : ''}
+                  ${activeStep < 2 ? 'opacity-20 scale-75 translate-y-4' : ''}
+                `}
+              >
+                <div 
+                  aria-hidden="true" 
+                  className="font-display-xl text-white pointer-events-none select-none leading-none -tracking-[0.05em] whitespace-nowrap flex-shrink-0"
+                  style={{ fontSize: 'clamp(80px, 12vw, 180px)' }}
+                >
+                  02
+                </div>
+
+                <h3 className="font-headline-lg text-4xl md:text-6xl lg:text-[90px] leading-none whitespace-nowrap flex-shrink-0 z-10">Approve</h3>
+                  
+                {/* Motion Graphic 2: Approve Stamp */}
+                <div className={`z-10 flex-shrink-0 transition-opacity duration-700 ${activeStep === 2 ? 'is-visible opacity-100' : 'opacity-0'}`}>
+                  <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="anim-stamp-circle w-12 h-12 md:w-20 md:h-20 lg:w-[100px] lg:h-[100px]">
+                    <circle cx="50" cy="50" r="45" stroke="#E36540" strokeWidth="2" />
+                    <circle cx="50" cy="50" r="38" stroke="#E36540" strokeWidth="2" strokeDasharray="2 4" />
+                    <path d="M 30 50 L 45 65 L 75 30" stroke="#E36540" strokeWidth="4" strokeLinecap="square" className="anim-check" />
+                  </svg>
+                </div>
+              </div>
+
+              {/* Step 3 */}
+              <div 
+                ref={el => { stepRefs.current[2] = el; }} 
+                data-step="3"
+                className={`relative flex flex-row items-center justify-start gap-4 md:gap-8 px-margin-mobile md:px-margin-desktop h-[25vh] snap-center transition-all duration-700 ease-out py-8
+                  ${activeStep === 3 ? 'opacity-100 scale-100 translate-y-0' : ''}
+                  ${activeStep > 3 ? 'opacity-20 scale-75 -translate-y-4' : ''}
+                  ${activeStep < 3 ? 'opacity-20 scale-75 translate-y-4' : ''}
+                `}
+              >
+                <div 
+                  aria-hidden="true" 
+                  className="font-display-xl text-white pointer-events-none select-none leading-none -tracking-[0.05em] whitespace-nowrap flex-shrink-0"
+                  style={{ fontSize: 'clamp(80px, 12vw, 180px)' }}
+                >
+                  03
+                </div>
+
+                <h3 className="font-headline-lg text-4xl md:text-6xl lg:text-[90px] leading-none whitespace-nowrap flex-shrink-0 z-10">Build</h3>
+                  
+                {/* Motion Graphic 3: Build Blocks */}
+                <div className={`z-10 flex-shrink-0 transition-opacity duration-700 ${activeStep === 3 ? 'is-visible opacity-100' : 'opacity-0'}`}>
+                  <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-12 h-12 md:w-20 md:h-20 lg:w-[100px] lg:h-[100px]">
+                    <rect x="10" y="70" width="80" height="20" fill="#E36540" className="anim-build-block anim-build-block-1" />
+                    <rect x="25" y="45" width="20" height="20" fill="#E36540" className="anim-build-block anim-build-block-2" />
+                    <rect x="55" y="45" width="20" height="20" fill="#E36540" className="anim-build-block anim-build-block-2" />
+                    <rect x="35" y="20" width="30" height="20" fill="#E36540" className="anim-build-block anim-build-block-3" />
+                  </svg>
+                </div>
+              </div>
+
             </div>
           </div>
         </section>
@@ -111,7 +243,7 @@ export default function HomePage() {
               <div className="overflow-hidden mb-6">
                 <div
                   className="w-full aspect-[4/3] bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
-                  style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuCG9vcHR3LNiuxQhXLNh-wkMKTmPEhFI7FGJ9nXszbtaHZ8mrcUkK-7L-8Lz9kLoSqZB41XHc3ASDR0js9u5p2iqFDxw9SIJC3_TgxBaCygsYopZBWUfC4yjMYPX-eRMvAJyzXra3NeMEZjrbe2WJiBnEzwsr4ucbx396wAaMfnXrkw7ym4nAJDp2dze7Co-9LWz8HgJLV8JeD12oIjAp9dK0SjxthOkSzdGxbEowroen4RnWeVTXIn4NP6XWrove2ltU3f9pLOTN0')" }}
+                  style={{ backgroundImage: "url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=100&w=3840&auto=format&fit=crop')" }}
                 ></div>
               </div>
               <div className="flex justify-between items-start">
@@ -127,7 +259,7 @@ export default function HomePage() {
               <div className="overflow-hidden mb-6">
                 <div
                   className="w-full aspect-[3/4] bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
-                  style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuBTzp3i9xm7mE61aOfhgB1btf_dollZ8XKIj51SLKpI-IYLVqS4Y6TQazrs6tk0yhmzzQgPPMI6Q0tWbVevVB7sAamcv7t1S5jb8hee6p8fGOlSD3zev0NF_CvZJzqzzKjeV73OWkxGwHITWavINjkAuCRSM6V2YhhfhrDazChTBt_2moaR6JPf2rOzn-iB9yLu_C60klXb_s7XejH_m4yyxUT6LOUkMDDSF0hRFKcxIY1C8r8rmMOn8tSKmQFh586NVCJrxOGaPwM')" }}
+                  style={{ backgroundImage: "url('https://images.unsplash.com/photo-1497366216548-37526070297c?q=100&w=3840&auto=format&fit=crop')" }}
                 ></div>
               </div>
               <div className="flex justify-between items-start">
@@ -143,7 +275,7 @@ export default function HomePage() {
               <div className="overflow-hidden mb-6">
                 <div
                   className="w-full aspect-square bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
-                  style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuAHBUqNkJV-KS6xKKShKZMtTNRreleu7xGMQFMz75Zc-2GwXPslVMCDvK0Mc5cCVa_cS2XQiRjFMrjnhW3mWxdYjoTwfo985LgKuMrNQnzdijuiHO5fAYLLk9lSXKJQlkj2JK9p2rWF9TRQOR-C5HxjigTRKbfxRhRh1sjqbQlWFPL7jnnDM005bPZL3xQ14H3I4qzE5MFjSzt5oxXo4xCtl_QZnpS9Uhv0kba3sYrTIqpy3OIzKNROKKM1NVsHXyNlhFSyHdSz03Y')" }}
+                  style={{ backgroundImage: "url('https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=100&w=3840&auto=format&fit=crop')" }}
                 ></div>
               </div>
               <div>
@@ -156,7 +288,7 @@ export default function HomePage() {
               <div className="overflow-hidden mb-6">
                 <div
                   className="w-full aspect-[16/9] bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
-                  style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuAaPgBgXmWseeCb7BlARJtr2eWVmMm4I1olHk-YEuSEHhZ4AAJ9nwoVbA929rFCQqfI6cXBtGcNg-gd5Ty0tdzEAhM0-8wA9YLq08pYazoXBUCN3ewaOVjxWxeIaWaISVPhx107w02uICPIY6LpK8F92M0CWDDkjYaBeXloKfEJxSgJvjt8u7BPdG4ykSyIsn6ospaU-qT4dSzHG4CjpSXob4cqSwfGOBoYjAMDxoucI4EQP2DZCza3wHcV8Hv1W4s1qvRN4eUgsBQ')" }}
+                  style={{ backgroundImage: "url('https://images.unsplash.com/photo-1449844908441-8829872d2607?q=100&w=3840&auto=format&fit=crop')" }}
                 ></div>
               </div>
               <div className="flex justify-between items-start">
@@ -200,19 +332,27 @@ export default function HomePage() {
         <section className="bg-primary py-16 px-margin-mobile md:px-margin-desktop">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-gutter text-center md:text-left">
             <div>
-              <div className="font-headline-lg text-4xl md:text-5xl text-surface mb-2">15+ Years</div>
+              <div className="font-headline-lg text-4xl md:text-5xl text-surface mb-2">
+                <AnimatedCounter value={15} suffix="+ Years" />
+              </div>
               <div className="font-label-md text-on-surface-variant uppercase tracking-widest">Global Practice</div>
             </div>
             <div>
-              <div className="font-headline-lg text-4xl md:text-5xl text-surface mb-2">120+ Projects</div>
+              <div className="font-headline-lg text-4xl md:text-5xl text-surface mb-2">
+                <AnimatedCounter value={120} suffix="+ Projects" />
+              </div>
               <div className="font-label-md text-on-surface-variant uppercase tracking-widest">Built to Date</div>
             </div>
             <div>
-              <div className="font-headline-lg text-4xl md:text-5xl text-surface mb-2">2.4M sq.ft</div>
+              <div className="font-headline-lg text-4xl md:text-5xl text-surface mb-2">
+                <AnimatedCounter value={2.4} decimals={1} suffix="M sq.ft" />
+              </div>
               <div className="font-label-md text-on-surface-variant uppercase tracking-widest">Designed Space</div>
             </div>
             <div>
-              <div className="font-headline-lg text-4xl md:text-5xl text-surface mb-2">18 Awards</div>
+              <div className="font-headline-lg text-4xl md:text-5xl text-surface mb-2">
+                <AnimatedCounter value={18} suffix=" Awards" />
+              </div>
               <div className="font-label-md text-on-surface-variant uppercase tracking-widest">AIA &amp; International</div>
             </div>
           </div>
@@ -220,20 +360,7 @@ export default function HomePage() {
 
         {/* TESTIMONIALS */}
         <section className="py-section-v-padding px-margin-mobile md:px-margin-desktop bg-surface overflow-hidden">
-          <div className="max-w-4xl mx-auto text-center">
-            <span className="material-symbols-outlined text-secondary text-5xl mb-12 opacity-50">format_quote</span>
-            <div className="relative">
-              <blockquote className="font-headline-lg italic text-headline-lg-mobile md:text-headline-lg leading-tight mb-12">
-                &quot;The Architecton team didn&apos;t just design a house; they curated a lifestyle. Every morning when the light hits the gallery wall, we are reminded of the power of good design.&quot;
-              </blockquote>
-              <cite className="font-label-md uppercase tracking-widest not-italic block">— Julian &amp; Sarah Thorne, Big Sur Project</cite>
-            </div>
-            <div className="flex justify-center gap-4 mt-16">
-              <button className="w-2 h-2 rounded-full bg-primary"></button>
-              <button className="w-2 h-2 rounded-full bg-outline-variant hover:bg-primary transition-colors"></button>
-              <button className="w-2 h-2 rounded-full bg-outline-variant hover:bg-primary transition-colors"></button>
-            </div>
-          </div>
+          <TestimonialCarousel />
         </section>
 
         {/* FINAL CTA */}

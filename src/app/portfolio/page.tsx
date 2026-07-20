@@ -73,7 +73,7 @@ export default function PortfolioPage() {
             {/* Project 1 */}
             <div className="project-card relative aspect-[4/5] overflow-hidden group border-r border-b border-outline-variant">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5lxQNeQLnBfAeOr9ra2envIYM3t4UJinjz7XnNgSYWLbRDX_qj4nXuISO1htRLifae8v6PDrTGA5qJGUbUF5bt9w3VcPPquhQxf8d4ZP4NFvn9S68y5Z5B-rdWFij415RB0Z9AXYSa4UGtHMYNEiyrs9ou9a222YbSRuL3Rd7bxVux96fMzCbQROrT2CMLZdoK2Xiitbxmk3cRArKj-sN5MkcCsmjXuQ1B_7d4rmrMGOFY5FY1QGJjwlwhR-veaW5OOyub80QfaE" alt="Monolith House" />
+              <img className="w-full h-full object-cover" src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=100&w=3840&auto=format&fit=crop" alt="Monolith House" />
               <div className="project-overlay absolute inset-0 bg-black/40 opacity-0 transition-opacity duration-500 flex flex-col justify-end p-12 text-white">
                 <div className="mb-2 font-label-md text-label-md uppercase tracking-widest opacity-80">Residential</div>
                 <h3 className="font-headline-lg text-headline-lg mb-1">Monolith House</h3>
@@ -83,7 +83,7 @@ export default function PortfolioPage() {
             {/* Project 2 */}
             <div className="project-card relative aspect-[4/5] overflow-hidden group border-r border-b border-outline-variant">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD71LUQB_aYAXbQIsO7nOndhM0jd1mxgtUena5IeOFykCmIR96rZWot-WfoCgnlClp9dYHhapetl64FlrydZO074NJlN7sMEi2gEh9Xqm36KnMef4GCgMNuOtxzUM3PIYBNUMujZbi8vy6H9ORlLU-ZZe-EKdFSGlifz6XXbpzuX7_aMSK4YLxiuHLidDdbQBa7PjjI-UYO1m1ls1ER-LYGDKYzgYXjypy5SFA3y0-VYQ24P2lVjLVSjuVhUmIY7FzYSH5joTuA6dw" alt="Nexus Retail Lab" />
+              <img className="w-full h-full object-cover" src="https://images.unsplash.com/photo-1600607687920-4e20b33b003a?q=100&w=3840&auto=format&fit=crop" alt="Nexus Retail Lab" />
               <div className="project-overlay absolute inset-0 bg-black/40 opacity-0 transition-opacity duration-500 flex flex-col justify-end p-12 text-white">
                 <div className="mb-2 font-label-md text-label-md uppercase tracking-widest opacity-80">Commercial</div>
                 <h3 className="font-headline-lg text-headline-lg mb-1">Nexus Retail Lab</h3>
@@ -93,7 +93,7 @@ export default function PortfolioPage() {
             {/* Project 3 */}
             <div className="project-card relative aspect-[4/5] overflow-hidden group border-b border-outline-variant">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4uvkBTmSqsYWOIaBUSAZEz-ulNU2Cwnk0xYeFowbLci9ERfncz_1T_mKqqYYkcs3AhfU9w4JgyBKbxAHKkG3tuwjYNu2zYOM4qvLJrM4ISwVwGvOCr70wa4kyXRSR5wo-2QUNDeR9peLJBhZ2BmdsXp_-w2ZyFCvVj31QxIxHUcprUS21w6Ae3B3tgzpF9mbC92LI4gMFBSoehZl6K919xfOhP7IOkQ8Aoo8l0aZRQ_k8rH7oYESiFkMhlDjNQBnOPRUdWzpQcss" alt="Aethel Gallery" />
+              <img className="w-full h-full object-cover" src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=100&w=3840&auto=format&fit=crop" alt="Aethel Gallery" />
               <div className="project-overlay absolute inset-0 bg-black/40 opacity-0 transition-opacity duration-500 flex flex-col justify-end p-12 text-white">
                 <div className="mb-2 font-label-md text-label-md uppercase tracking-widest opacity-80">Public Spaces</div>
                 <h3 className="font-headline-lg text-headline-lg mb-1">Aethel Gallery</h3>
@@ -103,7 +103,7 @@ export default function PortfolioPage() {
             {/* Project 4 */}
             <div className="project-card relative aspect-[4/5] overflow-hidden group border-r border-b border-outline-variant">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDTRu2RoQd75vt6rGNlVOLg-YvVtmfKqrO7fFyznhAU_eC-9rardKisIcJdFpt03mLwB5z1GvZKdVPBuASdJ4ZzH4GI7DlZrIIbV_u3VBrdo-c-tj1fitMza5kvsmhG-LRP1BWqS8zv3UBQdDu3rY_S6E-9eQjXiWmVm-J3X9CWewKz4scKxX_iCcEsBMwCqBDWq5H27ydWvLMTTZ7DisRQB_I6sd1cJDklhGdroipMJ2jBrlGFfSmPzXCNwKawne8SU4KO06sVmFs" alt="The Archive" />
+              <img className="w-full h-full object-cover" src="https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?q=100&w=3840&auto=format&fit=crop" alt="The Archive" />
               <div className="project-overlay absolute inset-0 bg-black/40 opacity-0 transition-opacity duration-500 flex flex-col justify-end p-12 text-white">
                 <div className="mb-2 font-label-md text-label-md uppercase tracking-widest opacity-80">Interiors</div>
                 <h3 className="font-headline-lg text-headline-lg mb-1">The Archive</h3>
@@ -113,7 +113,7 @@ export default function PortfolioPage() {
             {/* Project 5 */}
             <div className="project-card relative aspect-[4/5] overflow-hidden group border-r border-b border-outline-variant">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB1ElCMhLKSj0w5BOkqDDJeHi8w3Lw1n4I88i5uBpN2hxCfq2EpsTaNl03uGCamcCYoeYByVqgqcxHH005kWSxlMkRQP7FV2VngFzKQinWFRAVnGb1dDphoDZWmH21hJUW8hfAGaorBXZteCxHSv2c_5NaHbiVRZPp-fzlLcehguglxdmM_07vCJJjAoDr-k4GEG_8Hl10iSaA7hETpvCfXQBWwne5aaiIfKWTz9WZ2Qh9TygK3LhAh6rd3M8x6N9xg1hkjZSexUAY" alt="Vila Marés" />
+              <img className="w-full h-full object-cover" src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=100&w=3840&auto=format&fit=crop" alt="Vila Marés" />
               <div className="project-overlay absolute inset-0 bg-black/40 opacity-0 transition-opacity duration-500 flex flex-col justify-end p-12 text-white">
                 <div className="mb-2 font-label-md text-label-md uppercase tracking-widest opacity-80">Residential</div>
                 <h3 className="font-headline-lg text-headline-lg mb-1">Vila Marés</h3>
@@ -123,7 +123,7 @@ export default function PortfolioPage() {
             {/* Project 6 */}
             <div className="project-card relative aspect-[4/5] overflow-hidden group border-b border-outline-variant">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBhfc12kY32aNonZ-V789Zxd3j9sW7A6mWHEk4s8wKM3q4zce_tXMjciIudMBzUcYEtlESpgKUwmh1HG23e6meMNYPr9jn2eFqKyDH6E42Dv1yVDrFwtoLfUEu-QHeMuMRFHiGtAIJulQrUgcyedgcLWr4kZL07g1pd4ltztVSP0FXEiLPP-5n2stTrpUZHGczbE2Cmytked98llGM8NBL97j0RFFV8pt_TCt3xFXcomxmTIyuC9aDuMyJB2mibA-RsHnjxzk00huk" alt="Elysium HQ" />
+              <img className="w-full h-full object-cover" src="https://images.unsplash.com/photo-1510694119864-16447833cb91?q=100&w=3840&auto=format&fit=crop" alt="Elysium HQ" />
               <div className="project-overlay absolute inset-0 bg-black/40 opacity-0 transition-opacity duration-500 flex flex-col justify-end p-12 text-white">
                 <div className="mb-2 font-label-md text-label-md uppercase tracking-widest opacity-80">Commercial</div>
                 <h3 className="font-headline-lg text-headline-lg mb-1">Elysium HQ</h3>

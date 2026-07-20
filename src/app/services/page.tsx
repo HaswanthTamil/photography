@@ -182,7 +182,7 @@ export default function ServicesPage() {
               <div className="h-80 md:h-1/2 w-full grayscale contrast-[1.1] brightness-[0.95]">
                 <div
                   className="w-full h-full bg-cover bg-center"
-                  style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuCkrOf10OrVbqeBIvnfZahUsRWpWRTheEEBh2Ln0frXjxhuUbjq-Tm4p8TOW8JelXu0budSYMyMI-gnjfkeLFj9wAiNYFnWHUotCNKCOFpGHQS3gU_ALdksx0_fZeRMPBaktMlvQWMbLa7iRgz6aiuGuueqIpAr264FGg7bKep5-Iwuz7pvoXcpGJXiTKL-P7JCZ6Yj3caq4LRaws4FmipQHjFzQ12qFVvd-u062zLEM8qB-FHWnVe9GONB1Wvh2qAqawM8Vro6pM0')" }}
+                  style={{ backgroundImage: "url('https://images.unsplash.com/photo-1524813686514-a57563d77965?q=100&w=3840&auto=format&fit=crop')" }}
                 ></div>
               </div>
 

@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  scroll-behavior: smooth;
+  scroll-snap-type: y proximity;
+}
+
 /* ─── Material Symbols ─────────────────────────────────────── */
 .material-symbols-outlined {
   font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
@@ -173,4 +178,154 @@ textarea:focus {
 
 .animate-stack-drop {
   animation: stackDrop 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ─── Why Architecton Stagger Reveal ────────────────────────── */
+.reveal-element {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 900ms cubic-bezier(0.16, 1, 0.3, 1), 
+              transform 900ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal-element.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ─── Editorial Scroll Animations ────────────────────────────── */
+@media (prefers-reduced-motion: no-preference) {
+  .editorial-ghost {
+    opacity: 0;
+    transform: scale(1.15);
+    filter: blur(8px);
+    transition: opacity 1000ms cubic-bezier(0.16, 1, 0.3, 1),
+                transform 1000ms cubic-bezier(0.16, 1, 0.3, 1),
+                filter 1000ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .editorial-ghost.is-visible {
+    opacity: 0.06;
+    transform: scale(1);
+    filter: blur(0px);
+  }
+
+  .editorial-title {
+    clip-path: inset(-20% 100% -20% -20%);
+    transition: clip-path 700ms cubic-bezier(0.16, 1, 0.3, 1) 150ms;
+  }
+  .editorial-title.is-visible {
+    clip-path: inset(-20% -20% -20% -20%);
+  }
+
+  .editorial-line {
+    width: 0px;
+    transition: width 500ms cubic-bezier(0.16, 1, 0.3, 1) 300ms;
+  }
+  .editorial-line.is-visible {
+    width: 60px;
+  }
+
+  .editorial-body {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 600ms cubic-bezier(0.16, 1, 0.3, 1) 450ms,
+                transform 600ms cubic-bezier(0.16, 1, 0.3, 1) 450ms;
+  }
+  .editorial-body.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .editorial-ghost {
+    opacity: 0.06;
+    transform: none;
+    filter: none;
+  }
+  .editorial-title {
+    clip-path: inset(-20% -20% -20% -20%);
+  }
+  .editorial-line {
+    width: 60px;
+  }
+  .editorial-body {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ─── Custom Motion Graphics ───────────────────────────────── */
+@media (prefers-reduced-motion: no-preference) {
+  /* Graphic 1: Design */
+  .anim-draw-line {
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+  }
+  .is-visible .anim-draw-line {
+    animation: drawLine 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  .anim-spin-slow {
+    transform-origin: center;
+  }
+  .is-visible .anim-spin-slow {
+    animation: spinSlow 15s linear infinite;
+  }
+
+  @keyframes drawLine {
+    to { stroke-dashoffset: 0; }
+  }
+  @keyframes spinSlow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  /* Graphic 2: Approve */
+  .anim-stamp-circle {
+    transform: scale(0.8) rotate(-45deg);
+    opacity: 0;
+  }
+  .is-visible .anim-stamp-circle {
+    animation: stampIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  .anim-check {
+    stroke-dasharray: 50;
+    stroke-dashoffset: 50;
+  }
+  .is-visible .anim-check {
+    animation: drawCheck 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.4s forwards;
+  }
+
+  @keyframes stampIn {
+    to { transform: scale(1) rotate(0deg); opacity: 1; }
+  }
+  @keyframes drawCheck {
+    to { stroke-dashoffset: 0; }
+  }
+
+  /* Graphic 3: Build */
+  .anim-build-block {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  .is-visible .anim-build-block-1 {
+    animation: blockUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards;
+  }
+  .is-visible .anim-build-block-2 {
+    animation: blockUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+  }
+  .is-visible .anim-build-block-3 {
+    animation: blockUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+  }
+
+  @keyframes blockUp {
+    to { transform: translateY(0); opacity: 1; }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .anim-draw-line { stroke-dashoffset: 0; }
+  .anim-spin-slow { transform: none; }
+  .anim-stamp-circle { transform: scale(1) rotate(0deg); opacity: 1; }
+  .anim-check { stroke-dashoffset: 0; }
+  .anim-build-block { transform: translateY(0); opacity: 1; }
 }

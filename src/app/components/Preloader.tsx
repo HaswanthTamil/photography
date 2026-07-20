@@ -11,7 +11,7 @@ export default function Preloader() {
     const timer = setTimeout(() => {
       setIsFading(true);
       setTimeout(() => setIsLoading(false), 1200); // Wait for opacity transition
-    }, 3200);
+    }, 2000);
 
     return () => clearTimeout(timer);
   }, []);
