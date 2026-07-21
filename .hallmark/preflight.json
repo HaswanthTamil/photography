@@ -1,0 +1,8 @@
+{
+  "date": "2026-07-22",
+  "font_stack": "Inter + Playfair Display existing; Fraunces + IBM Plex Sans added for Hallmark photography landing page",
+  "palette": "Warm neutral Tailwind palette preserved; Hallmark OKLCH tokens added in tokens.css",
+  "motion": "CSS and React scroll-driven motion; no external motion library",
+  "spacing": "Tailwind spacing preserved; Hallmark 4pt token scale added",
+  "framework": "Next.js 16 App Router"
+}
