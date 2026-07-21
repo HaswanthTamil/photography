@@ -90,7 +90,7 @@ export default function HomePage() {
             
             {/* Desktop: Scroll Video */}
             <div className="absolute inset-0 z-0 hidden md:block">
-              <ScrollVideo src="/bgvideo-scrub.mp4" />
+              <ScrollVideo src="/hero_video-scrub.mp4" />
             </div>
           
             {/* Overlay to hide watermark and provide elegant titling on desktop */}

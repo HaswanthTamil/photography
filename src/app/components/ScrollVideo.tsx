@@ -10,46 +10,69 @@ export default function ScrollVideo({ src, className }: { src: string, className
     const video = videoRef.current;
     if (!video) return;
 
-    let animationFrameId: number;
+    let animationFrameId: number | null = null;
     let targetTime = 0;
+    let activeTime = 0;
 
-    const handleScroll = () => {
-      if (!video.duration || isNaN(video.duration)) return;
-      
-      const scrollPosition = window.scrollY;
-      // Map the scroll range to the viewport height.
-      // This matches the h-[300vh] of the parent section minus 1vh (the sticky part)
-      const scrollRange = window.innerHeight * 2; 
+    const getScrollProgress = () => {
+      const scrollSection = video.closest("section");
+      const rect = scrollSection?.getBoundingClientRect();
+      const sectionTop = rect ? rect.top + window.scrollY : 0;
+      const sectionHeight = rect?.height || window.innerHeight * 3;
+      const scrollRange = Math.max(1, sectionHeight - window.innerHeight);
 
-      let progress = scrollPosition / scrollRange;
-      progress = Math.max(0, Math.min(1, progress));
-
-      targetTime = progress * video.duration;
+      return Math.max(0, Math.min(1, (window.scrollY - sectionTop) / scrollRange));
     };
 
-    const smoothUpdate = () => {
-      if (video.duration && !isNaN(video.duration)) {
-        // Smooth interpolation - the higher the multiplier, the snappier it is.
-        // We use 0.1 for a buttery smooth scrub that keeps up with the scroll.
-        video.currentTime += (targetTime - video.currentTime) * 0.1;
+    const seekToTarget = () => {
+      animationFrameId = null;
+
+      if (!video.duration || Number.isNaN(video.duration)) return;
+
+      activeTime += (targetTime - activeTime) * 0.35;
+
+      if (Math.abs(video.currentTime - activeTime) > 1 / 48) {
+        video.currentTime = activeTime;
       }
-      animationFrameId = requestAnimationFrame(smoothUpdate);
+
+      if (Math.abs(targetTime - activeTime) > 1 / 120) {
+        animationFrameId = requestAnimationFrame(seekToTarget);
+      }
+    };
+
+    const scheduleSeek = () => {
+      if (animationFrameId === null) {
+        animationFrameId = requestAnimationFrame(seekToTarget);
+      }
+    };
+
+    const handleScroll = () => {
+      if (!video.duration || Number.isNaN(video.duration)) return;
+
+      targetTime = getScrollProgress() * video.duration;
+      scheduleSeek();
+    };
+
+    const handleLoadedMetadata = () => {
+      activeTime = video.currentTime;
+      handleScroll();
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    
-    // Attempt to load metadata to get duration
-    video.addEventListener("loadedmetadata", handleScroll);
+    window.addEventListener("resize", handleScroll);
+    video.addEventListener("loadedmetadata", handleLoadedMetadata);
 
-    animationFrameId = requestAnimationFrame(smoothUpdate);
     handleScroll();
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
-      video.removeEventListener("loadedmetadata", handleScroll);
-      cancelAnimationFrame(animationFrameId);
+      window.removeEventListener("resize", handleScroll);
+      video.removeEventListener("loadedmetadata", handleLoadedMetadata);
+      if (animationFrameId !== null) {
+        cancelAnimationFrame(animationFrameId);
+      }
     };
-  }, []);
+  }, [src]);
 
   return (
     <div ref={containerRef} className={`w-full h-full relative ${className || ''}`}>
